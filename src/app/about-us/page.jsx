@@ -19,7 +19,7 @@ const AboutPage = () => {
       <Header />
 
       {/* --- HERO SECTION: THE SIGNATURE PORTRAIT --- */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center items-center lg:top-20 lg:py-60 lg:pt-0 mb-20 lg:mb-0">
+      <section className="relative w-full min-h-screen flex flex-col justify-center items-center lg:top-20 lg:left-20 lg:py-60 lg:pt-0 mb-20 lg:mb-0">
 
         {/* Massive Background Decorative Text */}
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[22vw] font-bold text-black/[0.02] whitespace-nowrap pointer-events-none select-none z-0 ${playfair.className}`}>
@@ -98,8 +98,8 @@ const AboutPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="relative">
             {/* Profile Image with modern offset box */}
-            <div className="aspect-[3/4] relative z-10">
-              <img src="divesh.png" alt="Divesh Paswan" className="w-full h-full object-cover rounded-sm shadow-2xl" />
+            <div className="relative z-10">
+              <img src="divesh.png" alt="Divesh Paswan" className="w-full h-180 object-cover rounded-sm shadow-2xl" />
             </div>
             <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-[#c26e00] -z-10 opacity-10"></div>
             <div className="absolute top-10 -left-10 text-[10px] rotate-90 origin-left uppercase tracking-[1em] opacity-20 whitespace-nowrap">
