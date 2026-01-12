@@ -33,7 +33,7 @@ const Header = () => {
         </div>
 
         {/* --- CENTRAL LOGO --- */}
-        <Link href="/" className="hidden md:block px-6">
+        <Link href="/" className="hidden md:block">
           <img 
             src="/logo.png" 
             alt="Logo" 
@@ -44,10 +44,10 @@ const Header = () => {
         {/* --- DESKTOP MENU (RIGHT) --- */}
         <div className="hidden md:flex flex-1 justify-start gap-12 items-center">
           <Link href="/about-us" className={`${playfair.className}  text-[14px] tracking-[0.4em] font-bold hover:text-[#a0884d] transition-colors`}>
-            ABOUT
+            ABOUT US
           </Link>
           <Link href="/contact-us" className={`${playfair.className}  text-[14px] tracking-[0.4em] font-bold hover:text-[#a0884d] transition-colors`}>
-            CONTACT
+            CONTACT US
           </Link>
         </div>
 

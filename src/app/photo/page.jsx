@@ -102,7 +102,7 @@ const Page = () => {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="relative h-[600px] w-full border border-white/10 p-4">
             <Image
-              src="/photo/WeddingImage/Photo.jpg" // Change to a different highlight image
+              src="/photo/WeddingImage/img19 (10).jpg" // Change to a different highlight image
               alt="Service Detail"
               fill
               className="object-cover p-4"

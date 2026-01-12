@@ -119,7 +119,7 @@ const FrontPage = () => {
                             href="https://flyproductionhouse.com/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`${playfair.className} group relative inline-flex items-center justify-center px-10 py-4 overflow-hidden font-medium tracking-tighter text-white bg-transparent border border-[#a0884d] rounded-full hover:text-black transition-all duration-500`}
+                            className={`${playfair.className} group relative inline-flex items-center justify-center px-5 py-2 lg:px-10 lg:py-4 overflow-hidden font-medium tracking-tighter text-white bg-transparent border border-[#a0884d] rounded-full hover:text-black transition-all duration-500`}
                         >
                             <span className="absolute inset-0 w-full h-full transition-all duration-500 ease-out transform translate-x-0 -skew-x-12 bg-[#a0884d] opacity-10 group-hover:bg-[#a0884d] group-hover:opacity-100 group-hover:skew-x-0"></span>
                             <span className="relative text-sm sm:text-lg tracking-[0.1em]">FLY PRODUCTION HOUSE</span>
