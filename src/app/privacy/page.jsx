@@ -73,9 +73,8 @@ const PrivacyPage = () => {
           </aside>
 
           {/* RIGHT: CONTENT AREA */}
-          <div className="lg:w-3/4 space-y-32">
-            
-            {/* SECTION 01 */}
+          <div className="lg:w-3/4 space-y-32 ">
+            {/* SECTION 1 */}
             <section id="collection" className="scroll-mt-32 group">
               <div className="flex items-center gap-6 mb-8">
                 <span className="text-xs font-mono opacity-20 group-hover:opacity-100 transition-opacity">/ 01</span>
