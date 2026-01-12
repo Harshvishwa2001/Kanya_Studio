@@ -71,7 +71,6 @@ const PrivacyPage = () => {
               </div>
             </div>
           </aside>
-
           {/* RIGHT: CONTENT AREA */}
           <div className="lg:w-3/4 space-y-32 ">
             {/* SECTION 1 */}
