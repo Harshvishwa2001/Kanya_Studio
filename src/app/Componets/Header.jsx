@@ -43,11 +43,11 @@ const Header = () => {
 
         {/* --- DESKTOP MENU (RIGHT) --- */}
         <div className="hidden md:flex flex-1 justify-start gap-12 items-center">
-          <Link href="/about-us" className={`${playfair.className}  text-[14px] tracking-[0.4em] font-bold hover:text-[#a0884d] transition-colors`}>
-            ABOUT US
-          </Link>
           <Link href="/contact-us" className={`${playfair.className}  text-[14px] tracking-[0.4em] font-bold hover:text-[#a0884d] transition-colors`}>
             CONTACT US
+          </Link>
+          <Link href="/about-us" className={`${playfair.className}  text-[14px] tracking-[0.4em] font-bold hover:text-[#a0884d] transition-colors`}>
+            ABOUT US
           </Link>
         </div>
 
@@ -70,8 +70,8 @@ const Header = () => {
           {[
             { label: 'Photography', path: '/photo' },
             { label: 'Films', path: '/video' },
+            { label: 'Contact Us', path: '/contact-us' },
             { label: 'About Us', path: '/about-us' },
-            { label: 'Contact Us', path: '/contact-us' }
           ].map((item, idx) => (
             <Link 
               key={idx} 

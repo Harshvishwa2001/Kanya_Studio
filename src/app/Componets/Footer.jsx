@@ -76,6 +76,7 @@ const Footer = () => {
                 <p className="text-[11px] md:text-[12px] uppercase tracking-[0.6em] font-bold text-[#a0884d]">The Archive</p>
                 <nav className="flex flex-col gap-6 md:gap-8">
                   {[
+                    { label: 'Home', path: '/' },
                     { label: 'Photography', path: '/photo' },
                     { label: 'Cinematography', path: '/video' },
                     { label: 'About us', path: '/about-us' },
