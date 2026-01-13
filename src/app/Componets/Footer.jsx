@@ -83,6 +83,7 @@ const Footer = () => {
                     { label: 'Contact us', path: '/contact-us' }
                   ].map((item, idx) => (
                     <Link
+                    
                       key={idx}
                       href={item.path}
                       className="group flex items-center gap-4 w-fit"
