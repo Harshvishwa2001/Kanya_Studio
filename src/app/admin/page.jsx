@@ -9,25 +9,29 @@ const playfair = Playfair_Display({
   style: ['normal', 'italic'],
 })
 
-const Login = ({ isAuthenticated }) => {
+const Login = ({ isAuthenticated: initialAuth }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const router = useRouter();
 
+    // 1. Check for existing session on load
     useEffect(() => {
-      if (isAuthenticated) {
-        router.replace('/admin/dashboard');
-      }
-    }, [isAuthenticated, router]);
+        const storedAuth = localStorage.getItem("isAuthenticated");
+        if (initialAuth || storedAuth === 'true') {
+            router.replace('/admin/dashboard');
+        }
+    }, [initialAuth, router]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        
         if (!email || !password) {
             setError("Please enter your credentials");
             return;
         }
 
+        // Hardcoded check
         if (email === "admin@gmail.com" && password === "Admin123") {
             setError("");
             localStorage.setItem("isAuthenticated", 'true');
@@ -38,16 +42,19 @@ const Login = ({ isAuthenticated }) => {
         }
     }
 
+    // 4. Improved Back Button Handler
+    const handleBack = () => {
+        router.push('/');
+    }
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#f0e9e0] px-6 relative overflow-hidden">
             
-            {/* Background Decorative Element */}
             <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-bold text-black/[0.02] whitespace-nowrap pointer-events-none select-none ${playfair.className}`}>
                 ADMIN PORTAL
             </div>
 
             <div className="w-full max-w-md bg-white/40 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-white/20 relative z-10">
-                {/* Logo & Branding */}
                 <div className="flex flex-col items-center mb-10">
                     <img src="/logo.png" alt="logo" className='w-48 mb-6' />
                     <div className="h-[1px] w-12 bg-[#c26e00] mb-6 opacity-40"></div>
@@ -69,7 +76,7 @@ const Login = ({ isAuthenticated }) => {
                             placeholder="m@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-transparent border-b border-gray-300 py-3 focus:border-[#c26e00] focus:outline-none transition-colors duration-300 font-light"
+                            className="w-full bg-transparent border-b border-gray-300 py-3 focus:border-[#c26e00] focus:outline-none transition-colors duration-300 font-light text-black"
                         />
                     </div>
 
@@ -82,7 +89,7 @@ const Login = ({ isAuthenticated }) => {
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-transparent border-b border-gray-300 py-3 focus:border-[#c26e00] focus:outline-none transition-colors duration-300 font-light"
+                            className="w-full bg-transparent border-b border-gray-300 py-3 focus:border-[#c26e00] focus:outline-none transition-colors duration-300 font-light text-black"
                         />
                     </div>
 
@@ -94,7 +101,7 @@ const Login = ({ isAuthenticated }) => {
 
                     <button
                         type="submit"
-                        className="w-full mt-4 bg-black text-white py-4 rounded-full text-[11px] uppercase tracking-[0.4em] font-bold hover:bg-[#c26e00] transition-all duration-500 shadow-lg"
+                        className="w-full mt-4 bg-black text-white py-4 rounded-full text-[11px] uppercase tracking-[0.4em] font-bold hover:bg-[#c26e00] transition-all duration-500 shadow-lg active:scale-95"
                     >
                         Sign In
                     </button>
@@ -102,15 +109,15 @@ const Login = ({ isAuthenticated }) => {
 
                 <div className="mt-10 text-center">
                     <button 
-                        onClick={() => router.push('/')}
-                        className="text-[9px] uppercase tracking-[0.2em] text-gray-400 hover:text-black transition-colors"
+                        type="button" // Important: stop it from submitting the form
+                        onClick={handleBack}
+                        className="text-[9px] uppercase tracking-[0.2em] text-gray-400 hover:text-black transition-colors py-2 px-4 cursor-pointer"
                     >
                         ← Return to Gallery
                     </button>
                 </div>
             </div>
 
-            {/* Bottom Credit */}
             <div className="absolute bottom-8 text-[9px] uppercase tracking-[0.5em] text-gray-400">
                 Kanya Studio © 2026
             </div>
