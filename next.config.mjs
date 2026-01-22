@@ -14,11 +14,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '300mb', // Adjust this (e.g., 100mb) based on your video sizes
-    },
-  },
 };
 
 export default nextConfig;
