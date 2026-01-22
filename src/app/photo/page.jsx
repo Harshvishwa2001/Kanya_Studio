@@ -50,8 +50,8 @@ const Page = () => {
           className="object-cover brightness-75 scale-105 animate-subtle-zoom"
           priority
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <span className="text-[14px] uppercase tracking-[1.8em] text-white/80 mb-6 translate-y-4 animate-fade-in">Selected Works</span>
+        <div className="absolute inset-0 mt-64 flex flex-col items-center justify-center text-center px-4">
+          <span className="text-[14px] uppercase tracking-[1.8em]  text-white/80 mb-6 translate-y-4 animate-fade-in">Selected Works</span>
           <h1 className={`${playfair.className} text-5xl md:text-8xl text-white italic tracking-tighter drop-shadow-2xl`}>
             Rare <span className="opacity-70">Moments</span>
           </h1>

@@ -53,7 +53,7 @@ const VideographyPage = () => {
       {/* Hero Section */}
       <div className="relative w-full h-[70vh] md:h-screen overflow-hidden">
         <video
-          src="/photo/WeddingVideo/video.mp4"
+          src="/photo/WeddingVideo/Webside.mp4"
           autoPlay loop muted playsInline
           className="w-full h-full object-cover scale-105"
         />
