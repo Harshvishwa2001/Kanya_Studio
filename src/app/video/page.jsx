@@ -99,7 +99,7 @@ const VideographyPage = () => {
                     ref={(el) => (videoRefs.current[index] = el)}
                     src={video.videoUrl}
                     controls
-                    className="w-full aspect-[16/9] object-cover transition-transform duration-1000 group-hover:scale-105"
+                    className="w-full aspect-[16/9] object-cover transition-transform duration-1000 group-hover:scale-0"
                     onPlay={() => handlePlay(index)}
                   />
                   {/* Subtle Numbering */}
