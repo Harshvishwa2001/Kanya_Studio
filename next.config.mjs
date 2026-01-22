@@ -12,7 +12,17 @@ const nextConfig = {
         hostname: 'kanyastudios.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.kanyastudios.com', // Added www version
+        pathname: '/**',
+      },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '100mb', 
+    },
   },
 };
 
