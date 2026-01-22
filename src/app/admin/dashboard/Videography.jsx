@@ -126,6 +126,7 @@ export const Videography = ({ title }) => {
               <div className="relative aspect-video overflow-hidden">
                 <video 
                     src={item.videoUrl} 
+                    unoptimized={true}
                     className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
                     preload="metadata" 
                 />
