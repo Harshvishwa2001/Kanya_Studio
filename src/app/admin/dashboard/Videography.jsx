@@ -19,12 +19,21 @@ export const Videography = ({ title }) => {
       const res = await fetch("/api/videos");
       const result = await res.json();
       if (result.success) setItems(result.data);
+    } catch (err) {
+      console.error("Fetch error:", err);
     } finally { setIsLoading(false); }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.videoFile) return alert("Select a cinematic sequence!");
+    
+    // Client-side size check (Optional: e.g., 100MB limit)
+    const MAX_SIZE = 100 * 1024 * 1024; 
+    if (formData.videoFile.size > MAX_SIZE) {
+      return alert("File is too large. Max limit is 100MB.");
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -32,16 +41,25 @@ export const Videography = ({ title }) => {
       data.append("title", formData.title);
       data.append("file", formData.videoFile);
 
-      const res = await fetch("/api/videos", { method: "POST", body: data });
+      const res = await fetch("/api/videos", { 
+        method: "POST", 
+        body: data // Do NOT set Content-Type header manually, fetch does it for FormData
+      });
+
       const result = await res.json();
       
-      if (result.success) {
+      if (res.ok && result.success) {
         setItems([result.data, ...items]);
         setShowForm(false);
         setFormData({ title: "", videoFile: null });
+      } else {
+        // Handle specific server errors (413, 400, 403)
+        const errorMessage = result.message || result.error || "Server rejected the upload";
+        alert(`Upload Failed: ${errorMessage}`);
       }
     } catch (error) {
-      alert("Transmission failed!");
+      console.error("Upload Error:", error);
+      alert("Transmission failed! Please check your internet connection and file size.");
     } finally {
       setIsSubmitting(false);
     }
@@ -49,8 +67,12 @@ export const Videography = ({ title }) => {
 
   const deleteVideo = async (id) => {
     if (!confirm("Remove this film from the collection?")) return;
-    const res = await fetch(`/api/videos?id=${id}`, { method: "DELETE" });
-    if (res.ok) setItems(items.filter(v => v._id !== id));
+    try {
+        const res = await fetch(`/api/videos?id=${id}`, { method: "DELETE" });
+        if (res.ok) setItems(items.filter(v => v._id !== id));
+    } catch (error) {
+        alert("Delete failed");
+    }
   };
 
   return (
@@ -95,7 +117,7 @@ export const Videography = ({ title }) => {
             <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
                 <label className="flex-1 lg:w-72 flex items-center justify-center gap-3 bg-white/5 border border-white/10 rounded-2xl cursor-pointer text-[11px] font-black text-indigo-100 uppercase py-5 hover:bg-white/10 transition-all">
                     <FaVideo className="text-indigo-400" /> 
-                    {formData.videoFile ? "Footage Ready" : "Select Source File"}
+                    {formData.videoFile ? formData.videoFile.name.substring(0, 15) + "..." : "Select Source File"}
                     <input type="file" hidden accept="video/*" onChange={(e) => setFormData({...formData, videoFile: e.target.files[0]})} />
                 </label>
                 
@@ -127,7 +149,9 @@ export const Videography = ({ title }) => {
                 <video 
                     src={item.videoUrl} 
                     className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
-                    preload="metadata" 
+                    preload="metadata"
+                    playsInline
+                    muted
                 />
                 
                 {/* Visual Polish Overlays */}
@@ -143,7 +167,7 @@ export const Videography = ({ title }) => {
                 {/* Management Tags */}
                 <div className="absolute top-6 right-6 flex gap-2">
                     <button 
-                        onClick={() => deleteVideo(item._id)} 
+                        onClick={(e) => { e.stopPropagation(); deleteVideo(item._id); }} 
                         className="p-3 bg-white/10 backdrop-blur-lg rounded-xl text-white hover:bg-rose-500 transition-all"
                     >
                         <FaTrashAlt size={14} />
