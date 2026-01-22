@@ -14,7 +14,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
   return (
-    <nav className={`w-full `}>
+    <nav className={`w-full text-black`}>
       <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex justify-between items-center">
         
         {/* --- MOBILE LOGO --- */}
