@@ -14,7 +14,6 @@ const nextConfig = {
       },
     ],
   },
-  // This section solves the 413 "Payload Too Large" error
   experimental: {
     serverActions: {
       bodySizeLimit: '300mb', // Adjust this (e.g., 100mb) based on your video sizes
