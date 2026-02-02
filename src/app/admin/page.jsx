@@ -51,7 +51,7 @@ const Login = () => {
         e.preventDefault();
         setError("");
 
-        if (email === "divesh@gmail.com" && password === "Divesh@123") {
+        if (email === "diveshpaswan123@gmail.com" && password === "Divesh@9869788464") {
             const now = new Date().getTime();
             localStorage.setItem("isAuthenticated", 'true');
             localStorage.setItem("loginTimestamp", now.toString());
