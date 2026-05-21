@@ -89,6 +89,7 @@ const Page = () => {
                 src={img.imageUrl} // Fetched from your MongoDB
                 alt={img.name || "Wedding Gallery Image"}
                 fill
+                priority
                 sizes="(max-width: 768px) 50vw, 33vw"
                 className="object-cover hover:scale-105 transition-transform duration-500"
               />
