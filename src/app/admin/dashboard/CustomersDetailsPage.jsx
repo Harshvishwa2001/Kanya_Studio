@@ -136,11 +136,11 @@ const CustomersDetailsPage = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50/50">
-                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Profile</th>
-                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Contact</th>
-                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Event Intel</th>
-                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Guests</th>
-                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Services</th>
+                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Client Profile</th>
+                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Contact</th>
+                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Event Intel</th>
+                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Guests</th>
+                <th className="px-8 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Services</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -150,18 +150,18 @@ const CustomersDetailsPage = () => {
                   onClick={() => setSelectedClient(contact)}
                   className="group hover:bg-slate-50/80 transition-all cursor-pointer"
                 >
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-6 whitespace-nowrap">
                     <div className="flex flex-col">
                       <span className="text-sm font-black text-slate-900 group-hover:text-[#c26e00] transition-colors">{contact.name}</span>
                       <span className="text-[11px] text-slate-400">{contact.email}</span>
                     </div>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-6 whitespace-nowrap">
                     <span className="text-xs font-bold text-slate-600 bg-slate-100/50 px-3 py-1.5 rounded-lg border border-slate-100">
                         {contact.phone}
                     </span>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-6 whitespace-nowrap">
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center text-xs font-bold text-slate-700">
                         <FaCalendarAlt className="mr-2 text-[#c26e00] opacity-50" size={10} />
@@ -173,13 +173,13 @@ const CustomersDetailsPage = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-6 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                        <FaUserFriends className="text-slate-300" size={14} />
                        <span className="text-sm font-black text-slate-900">{contact.guestCount || 0}</span>
                     </div>
                   </td>
-                  <td className="px-8 py-6">
+                  <td className="px-8 py-6 whitespace-nowrap">
                     <div className="flex flex-wrap gap-1.5">
                       {(Array.isArray(contact.services) ? contact.services : [contact.services]).map((service, i) => (
                         <span key={i} className="text-[9px] font-black uppercase tracking-widest bg-slate-900 text-white px-3 py-1 rounded-full shadow-sm">

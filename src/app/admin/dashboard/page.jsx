@@ -113,7 +113,7 @@ const Dashboard = () => {
       </aside>
 
       {/* --- MAIN WORKSPACE --- */}
-      <main className="flex-1 ml-72 p-6 lg:p-10 flex flex-col">
+      <main className="flex-1 ml-72 p-6 lg:p-10 flex flex-col min-w-0">
 
         {/* <header className="mb-8 flex items-center justify-between px-4"> */}
         {/* <div className="flex flex-col">
