@@ -5,9 +5,9 @@ import Image from "next/image";
 import { Playfair_Display } from 'next/font/google';
 
 const playfair = Playfair_Display({
-    subsets: ['latin'],
-    weight: ['400', '700'],
-    style: ['normal', 'italic'],
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
 });
 
 const Photo = () => {
@@ -69,7 +69,7 @@ const Photo = () => {
       {/* Button */}
       <div className="flex justify-center mt-10">
         <button
-          onClick={() => window.location.href = '/photo'} 
+          onClick={() => window.location.href = '/photo'}
           className={`${playfair.className} bg-[#a0884d] px-8 py-3 text-xs sm:text-base rounded-md text-white md:font-medium hover:bg-[#8c7643] transition shadow-lg`}
         >
           Photography More

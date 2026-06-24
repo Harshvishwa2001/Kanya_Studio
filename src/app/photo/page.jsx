@@ -130,9 +130,9 @@ const Page = () => {
               <li className="text-[11px] uppercase tracking-widest font-bold">03. Archival Cloud Storage</li>
             </ul>
             <Link href={'/contact-us'}>
-            <button className="px-12 py-5 border border-[#a0884d] text-[#a0884d] text-[10px] uppercase tracking-[.4em] font-bold hover:bg-[#a0884d] hover:text-black transition-all duration-500">
-              Book Your Session
-            </button>
+              <button className="px-12 py-5 border border-[#a0884d] text-[#a0884d] text-[10px] uppercase tracking-[.4em] font-bold hover:bg-[#a0884d] hover:text-black transition-all duration-500">
+                Book Your Session
+              </button>
             </Link>
           </div>
         </div>

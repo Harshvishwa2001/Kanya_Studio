@@ -32,7 +32,7 @@ const Video = () => {
   }, []);
 
   return (
-    <div className="py-20 mb-20">
+    <div className="mb-20">
       <section className="relative w-full h-[70vh] md:h-screen overflow-hidden text-white bg-black">
         {/* Background Layer */}
         <div className="absolute inset-0 z-0">
