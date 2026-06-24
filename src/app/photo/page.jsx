@@ -47,6 +47,7 @@ const Page = () => {
           src="/photo/WeddingImage/Photo.jpg"
           alt="Wedding Hero"
           fill
+          quality={100}
           className="object-cover brightness-75 scale-105 animate-subtle-zoom"
           priority
         />
@@ -90,7 +91,8 @@ const Page = () => {
                 alt={img.name || "Wedding Gallery Image"}
                 fill
                 priority
-                sizes="(max-width: 768px) 50vw, 33vw"
+                unoptimized={true}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
@@ -106,6 +108,7 @@ const Page = () => {
               src="/photo/WeddingImage/img19 (10).jpg" // Change to a different highlight image
               alt="Service Detail"
               fill
+              quality={100}
               className="object-cover p-4"
             />
             <div className="absolute -bottom-10 -right-10 bg-[#a0884d] p-10 hidden md:block">
