@@ -48,7 +48,7 @@ const Page = () => {
           src="/photo/WeddingImage/Photo.jpg"
           alt="Wedding Hero"
           fill
-          quality={100}
+          quality={75}
           className="object-cover brightness-75 scale-105 animate-subtle-zoom"
           priority
         />

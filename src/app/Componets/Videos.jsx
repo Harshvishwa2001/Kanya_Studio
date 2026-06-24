@@ -8,8 +8,8 @@ const Videos = ({ videoItems }) => {
 
   const getHighQualityUrl = (url) => {
     if (!url || !url.includes('cloudinary.com')) return url;
-    // Request maximum quality and 1080p resolution limit from Cloudinary
-    return url.replace('/upload/', '/upload/q_auto:best,f_auto,w_1920,c_limit/');
+    // Fast loading prioritized over raw resolution for web playback
+    return url.replace('/upload/', '/upload/q_auto,f_auto,w_1280,c_limit/');
   };
 
   return (

@@ -46,7 +46,7 @@ const VideographyPage = () => {
 
   const getHighQualityUrl = (url) => {
     if (!url || !url.includes('cloudinary.com')) return url;
-    return url.replace('/upload/', '/upload/q_auto:best,f_auto,w_1920,c_limit/');
+    return url.replace('/upload/', '/upload/q_auto,f_auto,w_1280,c_limit/');
   };
 
   return (

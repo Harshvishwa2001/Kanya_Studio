@@ -112,8 +112,8 @@ export const Photography = ({ title }) => {
       <div className="flex flex-col gap-2">
         <p className="font-medium text-sm">Delete this photo from the collection?</p>
         <div className="flex gap-3 mt-2">
-          <button 
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors"
             onClick={async () => {
               toast.dismiss(t.id);
               try {
@@ -128,8 +128,8 @@ export const Photography = ({ title }) => {
           >
             Delete
           </button>
-          <button 
-            className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+          <button
+            className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-md text-xs font-bold transition-colors"
             onClick={() => toast.dismiss(t.id)}
           >
             Cancel
@@ -142,7 +142,7 @@ export const Photography = ({ title }) => {
   return (
     <div className="max-w-[1400px] mx-auto space-y-10 pb-20 px-6">
       {/* 1. LUXE HEADER */}
-      <div className="flex flex-col md:flex-col justify-between items-start gap-6 border-b border-slate-100 pb-10 pt-6">
+      <div className="flex flex-col md:flex-col justify-between items-start gap-6 border-b border-slate-100 pb-6  ">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 bg-[#0f172a] rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/20">
             <FaImage className="text-white text-2xl" />
@@ -164,7 +164,7 @@ export const Photography = ({ title }) => {
             <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3 group-hover:bg-indigo-600/20 transition-colors duration-1000" />
 
             <div className="relative z-10 flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-end">
-              
+
               <div className="w-full lg:flex-1 space-y-3">
                 <label className="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] ml-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />

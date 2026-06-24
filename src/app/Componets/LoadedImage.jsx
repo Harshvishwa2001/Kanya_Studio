@@ -5,6 +5,15 @@ import Image from 'next/image';
 const LoadedImage = ({ src, alt, className, ...props }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getOptimizedUrl = (url) => {
+    if (!url || typeof url !== 'string' || !url.includes('cloudinary.com')) return url;
+    if (url.includes('/upload/q_')) return url; // Already has transformation
+    // Request auto quality, auto format, and cap width at 1200px to ensure blazingly fast load times
+    return url.replace('/upload/', '/upload/q_auto,f_auto,w_1200,c_limit/');
+  };
+
+  const optimizedSrc = getOptimizedUrl(src);
+
   return (
     <>
       {/* Shimmer Loader Background */}
@@ -16,7 +25,7 @@ const LoadedImage = ({ src, alt, className, ...props }) => {
       
       {/* Actual Image */}
       <Image
-        src={src}
+        src={optimizedSrc}
         alt={alt}
         className={`${className || ''} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-700`}
         onLoad={() => setIsLoaded(true)}

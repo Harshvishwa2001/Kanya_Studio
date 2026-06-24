@@ -92,8 +92,8 @@ export const Videography = ({ title }) => {
       <div className="flex flex-col gap-2">
         <p className="font-medium text-sm">Remove this film from the collection?</p>
         <div className="flex gap-3 mt-2">
-          <button 
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors"
             onClick={async () => {
               toast.dismiss(t.id);
               try {
@@ -109,8 +109,8 @@ export const Videography = ({ title }) => {
           >
             Delete
           </button>
-          <button 
-            className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+          <button
+            className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-md text-xs font-bold transition-colors"
             onClick={() => toast.dismiss(t.id)}
           >
             Cancel
@@ -124,7 +124,7 @@ export const Videography = ({ title }) => {
     <div className="max-w-[1400px] mx-auto space-y-10 pb-20 px-4">
 
       {/* 1. CINEMATIC HEADER */}
-      <div className="flex flex-col md:flex-col justify-between items-center gap-6 py-10 border-b border-slate-100">
+      <div className="flex flex-col md:flex-col justify-between items-center gap-6 border-b border-slate-100">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-indigo-200">
             <FaFilm size={28} />
@@ -139,9 +139,9 @@ export const Videography = ({ title }) => {
           <form onSubmit={handleSubmit} className="relative bg-[#0a0f1c] p-8 md:p-10 rounded-[2rem] border border-white/5 shadow-2xl overflow-hidden group">
             {/* Subtle premium glow effect */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#c26e00]/10 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3 group-hover:bg-[#c26e00]/20 transition-colors duration-1000" />
-            
+
             <div className="relative z-10 flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-end">
-              
+
               {/* Film Title Input */}
               <div className="w-full lg:flex-1 space-y-3">
                 <label className="flex items-center gap-2 text-[10px] font-black text-[#c26e00] uppercase tracking-[0.2em] ml-1">
@@ -160,7 +160,7 @@ export const Videography = ({ title }) => {
 
               {/* Action Buttons */}
               <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
-                
+
                 {/* File Upload Trigger */}
                 <label className="flex-1 lg:w-80 flex items-center gap-4 bg-white/5 border border-dashed border-white/20 p-2 rounded-2xl cursor-pointer hover:border-[#c26e00]/50 hover:bg-white/10 transition-all">
                   <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0 transition-colors group-hover:text-[#c26e00]">

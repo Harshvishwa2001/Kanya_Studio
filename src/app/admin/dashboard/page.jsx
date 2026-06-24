@@ -115,8 +115,8 @@ const Dashboard = () => {
       {/* --- MAIN WORKSPACE --- */}
       <main className="flex-1 ml-72 p-6 lg:p-10 flex flex-col">
 
-        <header className="mb-8 flex items-center justify-between px-4">
-          <div className="flex flex-col">
+        {/* <header className="mb-8 flex items-center justify-between px-4"> */}
+        {/* <div className="flex flex-col">
             <div className="flex items-center gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
               <FaCompass size={12} className="text-slate-900" />
               <span>Kanya Admin</span>
@@ -126,9 +126,9 @@ const Dashboard = () => {
             <h1 className="text-3xl font-black tracking-tight text-slate-900">
               {activeTab === 'Overview' ? 'Welcome, Divesh' : activeTab}
             </h1>
-          </div>
+          </div> */}
 
-          {/* <div className="flex items-center gap-6">
+        {/* <div className="flex items-center gap-6">
             <div className="relative group flex items-center gap-4 bg-white px-4 py-2 rounded-2xl border border-slate-100 shadow-sm cursor-pointer hover:shadow-md transition-all">
               <div className="text-right">
                 <p className="text-[11px] font-bold leading-none">Divesh Paswan</p>
@@ -139,7 +139,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div> */}
-        </header>
+        {/* </header> */}
 
         <div className="flex-1 bg-white rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.02)] border border-slate-50 p-4 md:p-10 transition-all">
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-700 h-full">
