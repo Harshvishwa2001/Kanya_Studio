@@ -16,30 +16,16 @@ export async function GET() {
 export async function POST(req) {
   try {
     await dbConnect();
-    const formData = await req.formData();
-    const file = formData.get("file");
-    const title = formData.get("title");
+    const body = await req.json();
+    const { title, videoUrl } = body;
 
-    if (!file || !title) {
-      return NextResponse.json({ success: false, message: "Title and Video are required" }, { status: 400 });
+    if (!title || !videoUrl) {
+      return NextResponse.json({ success: false, message: "Title and Video URL are required" }, { status: 400 });
     }
-
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    const uploadResponse = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ 
-        resource_type: "video", // CRITICAL for video files
-        folder: "kanya_studio_videos" 
-      }, (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      }).end(buffer);
-    });
 
     const newVideo = await Video_schema.create({
       title,
-      videoUrl: uploadResponse.secure_url,
+      videoUrl,
     });
 
     return NextResponse.json({ success: true, data: newVideo });

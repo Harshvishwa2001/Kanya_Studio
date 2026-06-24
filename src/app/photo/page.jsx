@@ -6,6 +6,7 @@ import Footer from '../Componets/Footer';
 import { Playfair_Display } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
+import LoadedImage from '../Componets/LoadedImage';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -86,11 +87,11 @@ const Page = () => {
               key={img._id || index}
               className="relative w-full h-120 overflow-hidden"
             >
-              <Image
+              <LoadedImage
                 src={img.imageUrl} // Fetched from your MongoDB
                 alt={img.name || "Wedding Gallery Image"}
                 fill
-                priority
+                priority={index < 4}
                 unoptimized={true}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover hover:scale-105 transition-transform duration-500"

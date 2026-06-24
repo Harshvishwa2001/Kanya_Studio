@@ -4,6 +4,7 @@ import {
   FaPlus, FaTrashAlt, FaSpinner, FaVideo,
   FaPlay, FaFilm, FaTimes, FaExternalLinkAlt
 } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 
 export const Videography = ({ title }) => {
   const [items, setItems] = useState([]);
@@ -26,53 +27,97 @@ export const Videography = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.videoFile) return alert("Select a cinematic sequence!");
+    if (!formData.videoFile) return toast.error("Select a cinematic sequence!");
 
     // Client-side size check (Optional: e.g., 100MB limit)
     const MAX_SIZE = 100 * 1024 * 1024;
     if (formData.videoFile.size > MAX_SIZE) {
-      return alert("File is too large. Max limit is 100MB.");
+      return toast.error("File is too large. Max limit is 100MB.");
     }
 
     setIsSubmitting(true);
 
     try {
-      const data = new FormData();
-      data.append("title", formData.title);
-      data.append("file", formData.videoFile);
-
-      const res = await fetch("/api/videos", {
+      // 1. Get Signature
+      const signRes = await fetch("/api/sign-cloudinary", {
         method: "POST",
-        body: data // Do NOT set Content-Type header manually, fetch does it for FormData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folder: "kanya_studio_videos" })
       });
+      const signData = await signRes.json();
+      if (!signRes.ok) throw new Error(signData.error || "Failed to get signature");
 
-      const result = await res.json();
+      // 2. Upload to Cloudinary directly
+      const uploadData = new FormData();
+      uploadData.append("file", formData.videoFile);
+      uploadData.append("api_key", signData.apiKey);
+      uploadData.append("timestamp", signData.timestamp);
+      uploadData.append("signature", signData.signature);
+      uploadData.append("folder", "kanya_studio_videos");
 
-      if (res.ok && result.success) {
-        setItems([result.data, ...items]);
+      const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${signData.cloudName}/video/upload`, {
+        method: "POST",
+        body: uploadData
+      });
+      const uploadResult = await uploadRes.json();
+      if (!uploadRes.ok) throw new Error(uploadResult.error?.message || "Failed to upload to Cloudinary");
+
+      // 3. Save to MongoDB
+      const saveRes = await fetch("/api/videos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: formData.title, videoUrl: uploadResult.secure_url })
+      });
+      const saveResult = await saveRes.json();
+
+      if (saveRes.ok && saveResult.success) {
+        setItems([saveResult.data, ...items]);
         setShowForm(false);
         setFormData({ title: "", videoFile: null });
+        toast.success("Film uploaded successfully!");
       } else {
-        // Handle specific server errors (413, 400, 403)
-        const errorMessage = result.message || result.error || "Server rejected the upload";
-        alert(`Upload Failed: ${errorMessage}`);
+        const errorMessage = saveResult.message || saveResult.error || "Server rejected the upload";
+        toast.error(`Save Failed: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Upload Error:", error);
-      alert("Transmission failed! Please check your internet connection and file size.");
+      toast.error(`Transmission failed! ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const deleteVideo = async (id) => {
-    if (!confirm("Remove this film from the collection?")) return;
-    try {
-      const res = await fetch(`/api/videos?id=${id}`, { method: "DELETE" });
-      if (res.ok) setItems(items.filter(v => v._id !== id));
-    } catch (error) {
-      alert("Delete failed");
-    }
+  const deleteVideo = (id) => {
+    toast((t) => (
+      <div className="flex flex-col gap-2">
+        <p className="font-medium text-sm">Remove this film from the collection?</p>
+        <div className="flex gap-3 mt-2">
+          <button 
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              try {
+                const res = await fetch(`/api/videos?id=${id}`, { method: "DELETE" });
+                if (res.ok) {
+                  setItems(items.filter(v => v._id !== id));
+                  toast.success("Film removed successfully!");
+                }
+              } catch (error) {
+                toast.error("Delete failed");
+              }
+            }}
+          >
+            Delete
+          </button>
+          <button 
+            className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity, position: "top-center" });
   };
 
   return (
@@ -90,32 +135,65 @@ export const Videography = ({ title }) => {
           </div>
         </div>
 
-        <div className="animate-in slide-in-from-top-4 duration-500">
-          <form onSubmit={handleSubmit} className="bg-slate-900 p-10 rounded-[2.5rem] shadow-3xl flex flex-col lg:flex-row gap-6 items-center">
-            <div className="w-full lg:flex-1 space-y-2">
-              <p className="text-[10px] font-bold text-indigo-300 uppercase tracking-widest ml-1">Film Title</p>
-              <input
-                type="text" required placeholder="Ex: The Royal Wedding of Aaditya & Meera"
-                className="w-full bg-white/10 border border-white/10 rounded-2xl py-5 px-6 text-white text-sm outline-none focus:border-indigo-500 transition-all placeholder:text-slate-500"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
-            </div>
+        <div className="animate-in fade-in slide-in-from-top-8 duration-700 w-full mt-4">
+          <form onSubmit={handleSubmit} className="relative bg-[#0a0f1c] p-8 md:p-10 rounded-[2rem] border border-white/5 shadow-2xl overflow-hidden group">
+            {/* Subtle premium glow effect */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#c26e00]/10 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3 group-hover:bg-[#c26e00]/20 transition-colors duration-1000" />
+            
+            <div className="relative z-10 flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-end">
+              
+              {/* Film Title Input */}
+              <div className="w-full lg:flex-1 space-y-3">
+                <label className="flex items-center gap-2 text-[10px] font-black text-[#c26e00] uppercase tracking-[0.2em] ml-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#c26e00] animate-pulse" />
+                  Film Title
+                </label>
+                <div className="relative">
+                  <input
+                    type="text" required placeholder="Ex: The Royal Wedding of Aaditya & Meera"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white text-sm outline-none focus:bg-white/10 focus:border-[#c26e00]/50 transition-all placeholder:text-slate-500/50 focus:ring-4 focus:ring-[#c26e00]/10 font-medium"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  />
+                </div>
+              </div>
 
-            <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
-              <label className="flex-1 lg:w-72 flex items-center justify-center gap-3 bg-white/5 border border-white/10 rounded-2xl cursor-pointer text-[11px] font-black text-indigo-100 uppercase py-5 hover:bg-white/10 transition-all">
-                <FaVideo className="text-indigo-400" />
-                {formData.videoFile ? formData.videoFile.name.substring(0, 15) + "..." : "Select Source File"}
-                <input type="file" hidden accept="video/*" onChange={(e) => setFormData({ ...formData, videoFile: e.target.files[0] })} />
-              </label>
+              {/* Action Buttons */}
+              <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
+                
+                {/* File Upload Trigger */}
+                <label className="flex-1 lg:w-80 flex items-center gap-4 bg-white/5 border border-dashed border-white/20 p-2 rounded-2xl cursor-pointer hover:border-[#c26e00]/50 hover:bg-white/10 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0 transition-colors group-hover:text-[#c26e00]">
+                    <FaVideo size={18} />
+                  </div>
+                  <div className="flex flex-col justify-center overflow-hidden pr-4">
+                    <span className="text-[11px] font-black text-white uppercase tracking-wider truncate w-full">
+                      {formData.videoFile ? formData.videoFile.name : "Select Source File"}
+                    </span>
+                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
+                      {formData.videoFile ? "Ready for staging" : "MP4, MOV (Max 100MB)"}
+                    </span>
+                  </div>
+                  <input type="file" hidden accept="video/*" onChange={(e) => setFormData({ ...formData, videoFile: e.target.files[0] })} />
+                </label>
 
-              <button
-                disabled={isSubmitting}
-                type="submit"
-                className="bg-indigo-500 text-white px-12 py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-indigo-400 disabled:opacity-50 transition-all shadow-xl shadow-indigo-500/20"
-              >
-                {isSubmitting ? <FaSpinner className="animate-spin mx-auto" size={18} /> : "Upload"}
-              </button>
+                {/* Submit Button */}
+                <button
+                  disabled={isSubmitting}
+                  type="submit"
+                  className="bg-gradient-to-r from-[#c26e00] to-[#e68a00] text-white px-10 py-2 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:shadow-[0_10px_40px_-10px_rgba(194,110,0,0.6)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 transition-all flex items-center justify-center min-w-[160px] h-[66px]"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-3">
+                      <FaSpinner className="animate-spin" size={16} />
+                      <span>Syncing...</span>
+                    </div>
+                  ) : (
+                    "Upload Film"
+                  )}
+                </button>
+              </div>
+
             </div>
           </form>
         </div>

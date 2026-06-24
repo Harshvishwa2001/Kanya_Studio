@@ -1,14 +1,15 @@
 "use client"
 
 import React, { useState } from 'react'
+import { Playfair_Display } from 'next/font/google'
+import axios from 'axios'
+import { toast } from "react-hot-toast";
+
 const playfair = Playfair_Display({
     subsets: ['latin'],
     weight: ['400', '700'], // adjust as needed
     style: ['normal', 'italic'], // if you need italic
 })
-
-import { Playfair_Display } from 'next/font/google'
-import axios from 'axios'
 
 const Contact_Form = () => {
     const options = ['Photography', 'Films', 'Both Photography and Films']
@@ -44,10 +45,10 @@ const Contact_Form = () => {
         try {
             const response = await axios.post("/api/contactform", formData);
             console.log("Response:", response.data);
-            alert("Form submitted successfully!");
+            toast.success("Form submitted successfully!");
         } catch (error) {
             console.error("Error submitting form:", error);
-            alert("Failed to submit form. Check backend connection.");
+            toast.error("Failed to submit form. Check backend connection.");
         }
     };
 

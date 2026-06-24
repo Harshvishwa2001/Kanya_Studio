@@ -4,6 +4,7 @@ import {
   FaPlus, FaTrashAlt, FaSpinner, FaCloudUploadAlt,
   FaEdit, FaImage, FaExpandAlt, FaTimes
 } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 
 export const Photography = ({ title }) => {
   const [items, setItems] = useState([]);
@@ -27,31 +28,67 @@ export const Photography = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.imageFile && !editingId) return alert("Please select an image!");
+    if (!formData.imageFile && !editingId) return toast.error("Please select an image!");
     setIsSubmitting(true);
 
     try {
-      const data = new FormData();
-      data.append("name", formData.name);
-      if (formData.imageFile) data.append("file", formData.imageFile);
-      if (editingId) data.append("id", editingId);
+      let finalImageUrl = null;
+
+      if (formData.imageFile) {
+        // 1. Get Signature
+        const signRes = await fetch("/api/sign-cloudinary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folder: "kanya_studio" })
+        });
+        const signData = await signRes.json();
+        if (!signRes.ok) throw new Error(signData.error || "Failed to get signature");
+
+        // 2. Upload to Cloudinary
+        const uploadData = new FormData();
+        uploadData.append("file", formData.imageFile);
+        uploadData.append("api_key", signData.apiKey);
+        uploadData.append("timestamp", signData.timestamp);
+        uploadData.append("signature", signData.signature);
+        uploadData.append("folder", "kanya_studio");
+
+        const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${signData.cloudName}/image/upload`, {
+          method: "POST",
+          body: uploadData
+        });
+        const uploadResult = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadResult.error?.message || "Failed to upload to Cloudinary");
+
+        finalImageUrl = uploadResult.secure_url;
+      }
+
+      // 3. Save to MongoDB
+      const payload = { name: formData.name };
+      if (finalImageUrl) payload.imageUrl = finalImageUrl;
+      if (editingId) payload.id = editingId;
 
       const res = await fetch("/api/photography", {
         method: editingId ? "PUT" : "POST",
-        body: data,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
       const result = await res.json();
       if (result.success) {
         if (editingId) {
           setItems(items.map(item => item._id === editingId ? result.data : item));
+          toast.success("Photo updated successfully!");
         } else {
           setItems([result.data, ...items]);
+          toast.success("Photo uploaded successfully!");
         }
         resetForm();
+      } else {
+        toast.error(`Save failed: ${result.message || result.error}`);
       }
     } catch (error) {
-      alert("Capture failed!");
+      console.error(error);
+      toast.error(`Capture failed! ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -70,13 +107,36 @@ export const Photography = ({ title }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const deletePhoto = async (id) => {
-    if (!confirm("Are you sure?")) return;
-    try {
-      const res = await fetch(`/api/photography?id=${id}`, { method: "DELETE" });
-      const result = await res.json();
-      if (result.success) setItems(items.filter(p => p._id !== id));
-    } catch (err) { alert("Delete failed"); }
+  const deletePhoto = (id) => {
+    toast((t) => (
+      <div className="flex flex-col gap-2">
+        <p className="font-medium text-sm">Delete this photo from the collection?</p>
+        <div className="flex gap-3 mt-2">
+          <button 
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              try {
+                const res = await fetch(`/api/photography?id=${id}`, { method: "DELETE" });
+                const result = await res.json();
+                if (result.success) {
+                  setItems(items.filter(p => p._id !== id));
+                  toast.success("Photo deleted successfully!");
+                }
+              } catch (err) { toast.error("Delete failed"); }
+            }}
+          >
+            Delete
+          </button>
+          <button 
+            className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-1.5 rounded-md text-xs font-bold transition-colors" 
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity, position: "top-center" });
   };
 
   return (
@@ -98,46 +158,57 @@ export const Photography = ({ title }) => {
           </div>
         </div>
 
-        <div className="animate-in fade-in slide-in-from-top-10 duration-700">
-          <form onSubmit={handleSubmit} className="bg-[#0f172a] p-12 rounded-[3rem] border border-white/10 shadow-[0_40px_80px_-15px_rgba(15,23,42,0.4)] relative overflow-hidden">
+        <div className="animate-in fade-in slide-in-from-top-10 duration-700 w-full mt-4">
+          <form onSubmit={handleSubmit} className="relative bg-[#0a0f1c] p-8 md:p-10 rounded-[2rem] border border-white/5 shadow-2xl overflow-hidden group">
             {/* Background Glow */}
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600/20 blur-[100px] rounded-full" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3 group-hover:bg-indigo-600/20 transition-colors duration-1000" />
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
-              <div className="lg:col-span-5 space-y-4">
-                <label className="text-[10px] font-black text-indigo-300 uppercase tracking-widest ml-1">Work Description</label>
-                <input
-                  type="text" required placeholder="Ex: The Ethereal Landscape - Iceland 2024"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 px-7 text-white text-sm font-medium outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white/10 transition-all placeholder:text-slate-500"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
+            <div className="relative z-10 flex flex-col lg:flex-row gap-6 lg:gap-8 lg:items-end">
+              
+              <div className="w-full lg:flex-1 space-y-3">
+                <label className="flex items-center gap-2 text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] ml-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                  Work Description
+                </label>
+                <div className="relative">
+                  <input
+                    type="text" required placeholder="Ex: The Ethereal Landscape - Iceland 2024"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-white text-sm outline-none focus:bg-white/10 focus:border-indigo-500/50 transition-all placeholder:text-slate-500/50 focus:ring-4 focus:ring-indigo-500/10 font-medium"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
               </div>
 
-              <div className="lg:col-span-4">
-                <label className="group flex items-center justify-between gap-4 bg-white/5 border border-dashed border-white/20 p-2 rounded-2xl cursor-pointer hover:border-indigo-400 hover:bg-white/10 transition-all">
-                  <div className="flex items-center gap-4 pl-4">
-                    <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
-                      <FaCloudUploadAlt size={22} />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[11px] font-black text-white uppercase tracking-tight">
-                        {formData.imageFile ? "Image Loaded" : "Select Source"}
-                      </span>
-                      <span className="text-[9px] text-slate-400 uppercase font-bold tracking-tighter">High Res JPG/PNG</span>
-                    </div>
+              <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-4">
+                <label className="flex-1 lg:w-80 flex items-center gap-4 bg-white/5 border border-dashed border-white/20 p-2 rounded-2xl cursor-pointer hover:border-indigo-500/50 hover:bg-white/10 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0 transition-colors group-hover:text-indigo-400">
+                    <FaCloudUploadAlt size={22} />
+                  </div>
+                  <div className="flex flex-col justify-center overflow-hidden pr-4">
+                    <span className="text-[11px] font-black text-white uppercase tracking-wider truncate w-full">
+                      {formData.imageFile ? "Image Loaded" : "Select Source"}
+                    </span>
+                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
+                      High Res JPG/PNG
+                    </span>
                   </div>
                   <input type="file" hidden accept="image/*" onChange={(e) => setFormData({ ...formData, imageFile: e.target.files[0] })} />
                 </label>
-              </div>
 
-              <div className="lg:col-span-3">
                 <button
                   disabled={isSubmitting}
                   type="submit"
-                  className="w-full bg-[#6366f1] text-white py-6 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-[#4f46e5] hover:scale-[1.02] active:scale-95 disabled:opacity-50 shadow-[0_20px_40px_-10px_rgba(99,102,241,0.5)] transition-all flex items-center justify-center gap-3"
+                  className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-10 py-2 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:shadow-[0_10px_40px_-10px_rgba(99,102,241,0.6)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 transition-all flex items-center justify-center min-w-[160px] h-[66px]"
                 >
-                  {isSubmitting ? <FaSpinner className="animate-spin text-lg" /> : <>Upload</>}
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-3">
+                      <FaSpinner className="animate-spin text-lg" />
+                      <span>Uploading...</span>
+                    </div>
+                  ) : (
+                    "Upload Image"
+                  )}
                 </button>
               </div>
             </div>

@@ -44,6 +44,11 @@ const VideographyPage = () => {
 
   const currentYear = new Date().getFullYear();
 
+  const getHighQualityUrl = (url) => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+    return url.replace('/upload/', '/upload/q_auto:best,f_auto,w_1920,c_limit/');
+  };
+
   return (
     <div className="bg-[#fcfaf8] overflow-hidden">
       <div className="absolute top-0 left-0 w-full z-50">
@@ -97,7 +102,7 @@ const VideographyPage = () => {
                 <div className="relative overflow-hidden shadow-2xl bg-black">
                   <video
                     ref={(el) => (videoRefs.current[index] = el)}
-                    src={video.videoUrl}
+                    src={getHighQualityUrl(video.videoUrl)}
                     controls
                     className="w-full aspect-[16/9] object-cover transition-transform duration-1000"
                     onPlay={() => handlePlay(index)}

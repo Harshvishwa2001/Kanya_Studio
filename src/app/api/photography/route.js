@@ -16,31 +16,17 @@ export async function GET() {
 export async function POST(req) {
   try {
     await dbConnect();
-    const formData = await req.formData();
+    const body = await req.json();
     
-    const file = formData.get("file");
-    const name = formData.get("name");
+    const { name, imageUrl } = body;
 
-    if (!file || !name) {
-      return NextResponse.json({ success: false, message: "Name and File are required" }, { status: 400 });
+    if (!name || !imageUrl) {
+      return NextResponse.json({ success: false, message: "Name and Image URL are required" }, { status: 400 });
     }
 
-    // 1. Convert file to buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    // 2. Upload to Cloudinary using a Promise
-    const uploadResponse = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ folder: "kanya_studio" }, (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      }).end(buffer);
-    });
-
-    // 3. Save to MongoDB (Notice eventDate is NOT here)
     const newPhoto = await Photo_Schema.create({
       name,
-      imageUrl: uploadResponse.secure_url,
+      imageUrl,
     });
 
     return NextResponse.json({ success: true, data: newPhoto });
@@ -52,28 +38,16 @@ export async function POST(req) {
 export async function PUT(req) {
   try {
     await dbConnect();
-    const formData = await req.formData();
+    const body = await req.json();
     
-    const id = formData.get("id");
-    const name = formData.get("name");
-    const file = formData.get("file");
+    const { id, name, imageUrl } = body;
 
     if (!id) return NextResponse.json({ success: false, message: "ID required" }, { status: 400 });
 
     let updateData = { name };
 
-    // Update image only if a new file is provided
-    if (file && typeof file !== "string") {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const uploadResponse = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream({ folder: "kanya_studio" }, (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }).end(buffer);
-      });
-      updateData.imageUrl = uploadResponse.secure_url;
+    if (imageUrl) {
+      updateData.imageUrl = imageUrl;
     }
 
     const updatedPhoto = await Photo_Schema.findByIdAndUpdate(id, updateData, { new: true });

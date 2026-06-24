@@ -21,13 +21,13 @@ const Dashboard = () => {
       const isAuth = localStorage.getItem('isAuthenticated');
       const loginTime = localStorage.getItem('loginTimestamp');
       const now = new Date().getTime();
-      
+
       // Math: 12 hours * 60 mins * 60 secs * 1000 ms
-      const TWELVE_HOURS = 12 * 60 * 60 * 1000; 
+      const TWELVE_HOURS = 12 * 60 * 60 * 1000;
 
       if (!isAuth || !loginTime || (now - parseInt(loginTime) > TWELVE_HOURS)) {
         // Clear storage and redirect to login if session is invalid or expired
-        handleLogout(); 
+        handleLogout();
       } else {
         setLoading(false);
       }
@@ -85,8 +85,8 @@ const Dashboard = () => {
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`w-full group flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 ${activeTab === item.id
-                    ? 'bg-slate-900 text-white shadow-xl shadow-slate-200'
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                  ? 'bg-slate-900 text-white shadow-xl shadow-slate-200'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                   }`}
               >
                 <div className="flex items-center space-x-4">
@@ -128,7 +128,7 @@ const Dashboard = () => {
             </h1>
           </div>
 
-          <div className="flex items-center gap-6">
+          {/* <div className="flex items-center gap-6">
             <div className="relative group flex items-center gap-4 bg-white px-4 py-2 rounded-2xl border border-slate-100 shadow-sm cursor-pointer hover:shadow-md transition-all">
               <div className="text-right">
                 <p className="text-[11px] font-bold leading-none">Divesh Paswan</p>
@@ -138,7 +138,7 @@ const Dashboard = () => {
                 <FaUserCircle size={24} />
               </div>
             </div>
-          </div>
+          </div> */}
         </header>
 
         <div className="flex-1 bg-white rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.02)] border border-slate-50 p-4 md:p-10 transition-all">

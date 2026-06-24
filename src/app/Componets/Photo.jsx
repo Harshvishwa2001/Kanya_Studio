@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 import { Playfair_Display } from 'next/font/google';
+import LoadedImage from './LoadedImage';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -53,7 +54,7 @@ const Photo = () => {
               key={img._id || index}
               className="relative w-full aspect-square overflow-hidden"
             >
-              <Image
+              <LoadedImage
                 src={img.imageUrl} // Dynamic Cloudinary URL
                 alt={img.name || "Wedding Image"}
                 fill
